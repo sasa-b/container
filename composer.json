@@ -1,0 +1,15 @@
+{
+    "name": "sasablagojevic/container",
+    "description": "Lightweight dependency injection container with laravel like autowiring, interface/abstract class binding and contextual binding. PSR-11 compliant.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sasa Blagojevic",
+            "email": "sasa.blagojevic@mail.com"
+        }
+    ],
+    "require": {
+        "psr/container": "^1.0"
+    }
+}
