@@ -219,7 +219,12 @@ class Container implements ArrayAccess, ContainerInterface
      */
     public function call($class, $method, $params)
     {
-        $class_instance = is_object($class) ? $class : $this->make($class);
+        if (is_object($class)) {
+            $class_instance = $class;
+            $class = get_class($class_instance);
+        } else {
+            $class_instance = $this->instance($class);
+        }
 
         $reflection = $this->reflect($class, $method);
 
@@ -432,10 +437,10 @@ class Container implements ArrayAccess, ContainerInterface
     /**
      * Stores and retrieves Reflection instances for classes
      *
-     * @param string $service
+     * @param $service
      * @return ReflectionClass
      */
-    protected function reflection(string $service)
+    protected function reflection($service)
     {
         if (!isset($this->reflections[$service])) {
             $this->reflections[$service] = new ReflectionClass($service);
