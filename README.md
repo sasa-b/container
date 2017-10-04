@@ -164,6 +164,7 @@ $service = $container['foo'];
 
 // Only works for services mapped to keys
 $service = $container->foo();
+$service = $container->foo;
 
 // Retrieves a new instance or a singleton if a service has been registered as a singleton
 $service = $container->get('foo');
