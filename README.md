@@ -35,7 +35,10 @@ $container->bind(Foo\Bar::class, new \Foo\Bar());
    //or
    
    $container->bind('Foo\Bar', FooBar::class);
-   $container->share();
+   $container->share(Foo\Bar::class);
+   
+   $container->bind(Foo\Baz::class, Foo\Baz::class)->mapTo('baz');
+   $container->share('baz');
 ```
 
 
@@ -77,7 +80,61 @@ $container->register([
     Foundation\Database\QueryBuilder::class => (function ($c) {
         return new \Foundation\Database\PDOQuery($c['db']);
     })
-])->mapTo(['request', 'session', 'cookie', 'db'])->share(['session', 'db', Foundation\Core\Database::class]);
+])->mapTo(['request', 'session', 'cookie', 'db']);
+
+$container->register([
+    Foundation\Request\Http::class => Foundation\Request\Http::class,
+    Foundation\Sessions\SessionManager::class => \Foundation\Sessions\SessionManager::class,
+    Foundation\Request\Cookie::class => Foundation\Request\Cookie::class
+]);
+
+$container->keys([
+   'request' => Foundation\Request\Http::class => Foundation\Request\Http::class,
+   'session' => Foundation\Sessions\SessionManager::class,
+   'cookie' => Foundation\Request\Cookie::class
+]);
+```
+
+##### Registering multiple singletons
+
+```php
+/* Only those specified will be registered as singletons */
+$container->register([
+    Foundation\Request\Http::class => Foundation\Request\Http::class,
+    Foundation\Sessions\SessionManager::class => \Foundation\Sessions\SessionManager::class,
+    Foundation\Request\Cookie::class => Foundation\Request\Cookie::class,
+    'date' => \DateTime::class,
+    Foundation\Core\Database::class => Foundation\Core\Database::class,
+    Foundation\Database\QueryBuilder::class => (function ($c) {
+        return new \Foundation\Database\PDOQuery($c['db']);
+    })
+])->share(['session', 'db', Foundation\Core\Database::class]);
+
+/* All will be registered as singletons */
+$container->register([
+    Foundation\Request\Http::class => Foundation\Request\Http::class,
+    Foundation\Sessions\SessionManager::class => \Foundation\Sessions\SessionManager::class,
+    Foundation\Request\Cookie::class => Foundation\Request\Cookie::class,
+    'date' => \DateTime::class,
+    Foundation\Core\Database::class => Foundation\Core\Database::class,
+    Foundation\Database\QueryBuilder::class => (function ($c) {
+        return new \Foundation\Database\PDOQuery($c['db']);
+    })
+])->share();
+
+// or
+
+$container->register([
+    Foundation\Request\Http::class => Foundation\Request\Http::class,
+    Foundation\Sessions\SessionManager::class => \Foundation\Sessions\SessionManager::class,
+    Foundation\Request\Cookie::class => Foundation\Request\Cookie::class,
+    'date' => \DateTime::class,
+    Foundation\Core\Database::class => Foundation\Core\Database::class,
+    Foundation\Database\QueryBuilder::class => (function ($c) {
+        return new \Foundation\Database\PDOQuery($c['db']);
+    })
+], true);
+
 ```
 
 #### Abstract binding
@@ -94,6 +151,14 @@ $container->bind(Foo\AbstractBaz::class, Foo\Baz::class)
 $service = $container['Foo\Bar'];
 $service = $container[Foo\Bar::class];
 $service = $container['foo'];
+
+$service = $container->foo();
+
+// Retrieves a new instance or a singleton if a service has been registered as a singleton
+$service = $container->get('foo');
+
+// Always retrieves a singleton
+$service = $container->shared('foo');
 ```
 
 
