@@ -368,7 +368,6 @@ class Container implements ArrayAccess, ContainerInterface
     /**
      * @param mixed $offset
      * @return mixed
-     * @throws \Exception
      */
     public function offsetGet($offset) {
         $service = $this->map($offset);
@@ -378,11 +377,6 @@ class Container implements ArrayAccess, ContainerInterface
         }
 
         return $this->make($service);
-        /*if ($instance = $this->make($service)) {
-            return $instance;
-        } else {
-            throw new \Exception('Class not defined');
-        }*/
     }
     /* ArrayAccess Interface methods - END */
 
