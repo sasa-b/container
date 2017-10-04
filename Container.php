@@ -296,7 +296,7 @@ class Container implements ArrayAccess, ContainerInterface
    public function __call($name, $arguments)
    {
        if ($this->offsetExists($name)) {
-           return $this->instance($this->map($name), $arguments);
+           return $this[$name];
        }
    }
 
@@ -578,6 +578,18 @@ class Container implements ArrayAccess, ContainerInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Alias for register
+     *
+     * @param array $bindings
+     * @param $shared
+     * @return Container
+     */
+    public function bindMany(array $bindings, $shared)
+    {
+        return $this->register($bindings, $shared);
     }
 
     /**
