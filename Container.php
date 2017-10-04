@@ -137,12 +137,7 @@ class Container implements ArrayAccess, ContainerInterface
 
             $dependencies = $this->instantiateDependencies($reflection, $args);
 
-            //TO DO: add optional params for class __constructor
             //because ReflectClass::newInstanceArgs passes arguments positionally, so it's the same
-            if ($class == 'cookie' || $class == \Foundation\Request\Cookie::class) {
-                print_r($args);
-                print_r($dependencies);
-            }
             return new $class(...array_values($dependencies));
         }
 
