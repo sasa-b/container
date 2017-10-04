@@ -15,13 +15,13 @@ A service (bound value) can be a string representation of a class, an anonymous 
 
 <code>
 $container->bind(Foo\Bar::class, Foo\Bar::class);
-
+<br>
 $container->bind(Foo\Bar::class, function ($container) { 
    return new \Foo\Bar($container['Foo\Baz']);
 });
-
+<br>
 $container->bind('Foo\Bar', FooBar::class);
-
+<br>
 $container->bind(Foo\Bar::class, new \Foo\Bar());
 </code>
 
