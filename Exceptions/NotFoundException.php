@@ -6,12 +6,12 @@
  * Time: 4:17 PM
  */
 
-namespace App\src\Container\Exceptions;
+namespace Foundation\Container\Exceptions;
 
 
 use Psr\Container\NotFoundExceptionInterface;
 
-class UndefineServiceException extends \InvalidArgumentException implements NotFoundExceptionInterface
+class NotFoundException extends \InvalidArgumentException implements NotFoundExceptionInterface
 {
 
 }

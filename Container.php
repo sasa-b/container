@@ -10,7 +10,7 @@ namespace Foundation\Container;
 
 
 use Foundation\Container\Exceptions\ContainerException;
-use Foundation\Container\Exceptions\UndefineServiceException;
+use Foundation\Container\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ArrayAccess;
@@ -137,6 +137,7 @@ class Container implements ArrayAccess, ContainerInterface
 
             $dependencies = $this->instantiateDependencies($reflection, $args);
 
+            //TO DO: add optional params for class __constructor
             //because ReflectClass::newInstanceArgs passes arguments positionally, so it's the same
             return new $class(...array_values($dependencies));
         }
@@ -299,7 +300,7 @@ class Container implements ArrayAccess, ContainerInterface
      * @param $service
      * @return mixed
      * @throws ContainerException
-     * @throws UndefineServiceException
+     * @throws NotFoundException
      */
     public function make($service)
     {
@@ -316,7 +317,7 @@ class Container implements ArrayAccess, ContainerInterface
         } catch (\Exception $e) {
 
             if (!$this->has($service)) {
-                throw new UndefineServiceException("No service with [$service] name or key is registered.", $e->getCode());
+                throw new NotFoundException("No service with [$service] name or key is registered.", $e->getCode());
             } else {
                 throw new ContainerException($e->getMessage(), $e->getCode());
             }
@@ -586,11 +587,11 @@ class Container implements ArrayAccess, ContainerInterface
      *
      * @param $service
      * @param $binding
-     * @param null $tag
+     * @param null $context
      * @return $this
      * @throws \Foundation\MissingTagException
      */
-    public function bind($service, $binding, $tag = null)
+    public function bind($service, $binding, $context = null)
     {
         /**
          * If $service is a key and $binding is a string representation of a class
@@ -601,8 +602,8 @@ class Container implements ArrayAccess, ContainerInterface
         }
 
         if ($this->isAbstract($service)) {
-            if (isset($this->bindings[$service]) && $tag) {
-                $this->bindings["$service|".$this->map($tag)] = $binding;
+            if (isset($this->bindings[$service]) && $context) {
+                $this->bindings["$service|".$this->map($context)] = $binding;
                 return $this;
             }
         }
