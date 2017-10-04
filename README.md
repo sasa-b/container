@@ -5,9 +5,11 @@ Lightweight dependency injection container with laravel like autowiring, interfa
 
 ## Usage examples
 
-`require '../vendor/autoload.php';`
+```php
+require '../vendor/autoload.php';
 
-`$container = new Foundation\Container\Container();`
+$container = new Foundation\Container\Container();`
+```
 
 #### Binding/Registering services
 
@@ -21,37 +23,47 @@ $container->bind(Foo\Bar::class, function ($container) {
    
 }); 
 
-$container->bind('Foo\Bar', FooBar::class); <br/> $container->bind(Foo\Bar::class, new \Foo\Bar());
+$container->bind('Foo\Bar', FooBar::class); 
+
+$container->bind(Foo\Bar::class, new \Foo\Bar());
 ```
 
+##### Mapping services to keys
 For convenience you can map your services to keys and there are multiple ways of doing it.
 
-Directly with the bind statement
+1. With mapTo method via method chaining
+
+```php
+$container->bind(Foo\Bar::class, Foo\Bar::class)->mappedTo('foo');
+```
+
+2. With the keys method
+```php
+$container->('foo', Foo\Bar::class);
+```
+
+3. Directly with the bind statement
 ```php
 $container->bind('foo', function ($container) {
    return new Foo\Bar();
 });
 ```
 
-or with mappedTo method
+When you directly bind services to a key, they will only be accessible by that key name and those services can't be used for **autowiring (injecting by type hinting)**, unless the service you are binding is a string representaton of a class, then that service will automatically be mapped to the key. This does not apply to `mapTo` and `key` methods. 
 
-`$container->bind(Foo\Bar::class, Foo\Bar::class)->mappedTo('foo');`
-
-or with key method
-
-`$container->('foo', Foo\Bar::class);`
 
 #### Retrieveing services
 
-`$service = $container['Foo\Bar'];`
-`$service = $container[Foo\Bar::class];`
-`$service = $container['foo'];`
+```php
+$service = $container['Foo\Bar'];
+$service = $container[Foo\Bar::class];
+$service = $container['foo'];
+```
 
 #### Binding/Registering multiple services
 If you want 
 
 
-##### Mapping services to keys
 
 
 1. If you are binding a string representation of a class to a key, that service will automatically be mapped to it.
