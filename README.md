@@ -13,18 +13,25 @@ Lightweight dependency injection container with laravel like autowiring, interfa
 
 A service (bound value) can be a string representation of a class, an anonymous function which returns an object instance, or an object instance itself. If you bind an object instance itself, that service will essentially act as a singleton because the same instance will always be returned.
 
-<code>
-$container->bind(Foo\Bar::class, Foo\Bar::class); <br/> $container->bind(Foo\Bar::class, function ($container) { 
+```php
+$container->bind(Foo\Bar::class, Foo\Bar::class); 
+
+$container->bind(Foo\Bar::class, function ($container) { 
    return new \Foo\Bar($container['Foo\Baz']);
-}); <br/> $container->bind('Foo\Bar', FooBar::class); <br/> $container->bind(Foo\Bar::class, new \Foo\Bar());
-</code>
+   
+}); 
+
+$container->bind('Foo\Bar', FooBar::class); <br/> $container->bind(Foo\Bar::class, new \Foo\Bar());
+```
 
 For convenience you can map your services to keys and there are multiple ways of doing it.
 
 Directly with the bind statement
-`$container->bind('foo', function ($container) {
+```php
+$container->bind('foo', function ($container) {
    return new Foo\Bar();
-});`
+});
+```
 
 or with mappedTo method
 
