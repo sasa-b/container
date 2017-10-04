@@ -27,19 +27,30 @@ $container->bind('Foo\Bar', FooBar::class);
 
 $container->bind(Foo\Bar::class, new \Foo\Bar());
 ```
+##### Singletons
 
-##### Mapping services to keys
+```php
+   $container->bind('Foo\Bar', FooBar::class)->share();
+   
+   //or
+   
+   $container->bind('Foo\Bar', FooBar::class);
+   $container->share();
+```
+
+
+#### Mapping services to keys
 For convenience you can map your services to keys and there are multiple ways of doing it.
 
 1. With mapTo method via method chaining
 
 ```php
-$container->bind(Foo\Bar::class, Foo\Bar::class)->mappedTo('foo');
+$container->bind(Foo\Bar::class, Foo\Bar::class)->mapTo('foo');
 ```
 
-2. With the keys method
+2. With the key method
 ```php
-$container->('foo', Foo\Bar::class);
+$container->key('foo', Foo\Bar::class);
 ```
 
 3. Directly with the bind statement
@@ -49,8 +60,33 @@ $container->bind('foo', function ($container) {
 });
 ```
 
-When you directly bind services to a key, they will only be accessible by that key name and those services can't be used for **autowiring (injecting by type hinting)**, unless the service you are binding is a string representaton of a class, then that service will automatically be mapped to the key. This does not apply to `mapTo` and `key` methods. 
+When you directly bind services to a _key_, they will only be accessible by that _key_ and those services can't be used for **autowiring (injecting by type hinting)**, unless the service you are binding/registering is a string representaton of a class, in that case the service will automatically map to the given _key_. 
 
+In case of `mapTo` and `key` bound/registered services are accessible by both the key and their class name, and because of that they can be used for autowiring. 
+
+#### Binding/Registering multiple services
+For registering multiple services at once you can use the `register` method or it's alias `bindMany`.
+
+```php
+$container->register([
+    Foundation\Request\Http::class => Foundation\Request\Http::class,
+    Foundation\Sessions\SessionManager::class => \Foundation\Sessions\SessionManager::class,
+    Foundation\Request\Cookie::class => Foundation\Request\Cookie::class,
+    'date' => \DateTime::class,
+    Foundation\Core\Database::class => Foundation\Core\Database::class,
+    Foundation\Database\QueryBuilder::class => (function ($c) {
+        return new \Foundation\Database\PDOQuery($c['db']);
+    })
+])->mapTo(['request', 'session', 'cookie', 'db'])->share(['session', 'db', Foundation\Core\Database::class]);
+```
+
+#### Abstract binding
+You can bind/register services to interfaces and abstract classes as well. These abstract bindings are convenient when used with autowiring, because you can type hint with abstractions (abstract classes and interfaces) and not concretions (implementations).
+
+```php
+$container->bind(Foo\BarInterface::class, Foo\Bar::class)
+$container->bind(Foo\AbstractBaz::class, Foo\Baz::class)
+```
 
 #### Retrieveing services
 
@@ -59,32 +95,6 @@ $service = $container['Foo\Bar'];
 $service = $container[Foo\Bar::class];
 $service = $container['foo'];
 ```
-
-#### Binding/Registering multiple services
-If you want 
-
-
-
-
-1. If you are binding a string representation of a class to a key, that service will automatically be mapped to it.
-`$container->bind('date', \DateTime::class);`
-
-To retrieve the service just call
-`$container['date']` 
-or 
-`$container->get('date')` 
-or 
-`$container->date()`;
-
-
-#### Abstract binding
-You can bind/register services to interfaces and abstract classes as well. These abstract bindings are convenient for autowiring. type hint your dependencies in your method declarations
-
-because you are not type hinting with concretions but with interfaces, and abstract classes. these bindings to , a.k.a autowiring. 
- 
-`$container->bind(Foo\BarInterface::class, Foo\Bar::class)`
-`$container->bind(Foo\AbstractBaz::class, Foo\Baz::class)`
-
 
 
 
