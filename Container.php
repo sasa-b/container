@@ -309,6 +309,10 @@ class Container implements ArrayAccess, ContainerInterface
      */
     public function make($service)
     {
+        if (!$this->has($service)) {
+            throw new NotFoundException("No service with [$service] name or key is registered.");
+        }
+
         try {
 
             if (is_callable($this->bindings[$service]) && $this->bindings[$service] instanceof Closure) {
@@ -321,13 +325,8 @@ class Container implements ArrayAccess, ContainerInterface
 
         } catch (\Exception $e) {
 
-            if (!$this->has($service)) {
-                throw new NotFoundException("No service with [$service] name or key is registered.", $e->getCode());
-            } else {
-                throw new ContainerException($e->getMessage(), $e->getCode());
-            }
+            throw new ContainerException($e->getMessage(), $e->getCode());
         }
-
     }
 
     /* ArrayAccess Interface methods - START */
