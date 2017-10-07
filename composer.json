@@ -9,6 +9,7 @@
             "email": "sasa.blagojevic@mail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "psr/container": "^1.0"
     }
