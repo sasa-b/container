@@ -1,5 +1,5 @@
 {
-    "name": "sasablagojevic/container",
+    "name": "sasa-b/container",
     "description": "Lightweight dependency injection container with laravel like autowiring, interface/abstract class binding and contextual binding. PSR-11 compliant.",
     "type": "library",
     "license": "MIT",
