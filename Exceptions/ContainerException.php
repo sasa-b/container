@@ -6,7 +6,7 @@
  * Time: 4:16 PM
  */
 
-namespace Foundation\Container\Exceptions;
+namespace Foundation\Exceptions;
 
 
 use Psr\Container\ContainerExceptionInterface;
