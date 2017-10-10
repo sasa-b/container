@@ -4,6 +4,7 @@ Lightweight dependency injection container with laravel like autowiring, interfa
 *************
 
 To use the library clone the repo or just use composer to install it.
+
 `composer require sasa-b/container`
 
 ## Usage examples
