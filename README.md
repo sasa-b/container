@@ -93,7 +93,7 @@ $container->register([
 ]);
 
 $container->keys([
-   'request' => Foundation\Request\Http::class => Foundation\Request\Http::class,
+   'request' => Foundation\Request\Http::class,
    'session' => Foundation\Sessions\SessionManager::class,
    'cookie' => Foundation\Request\Cookie::class
 ]);
